@@ -16,7 +16,11 @@ arch('controllers')
 
 arch('livewire components')
     ->expect('App\Livewire')
-    ->toExtend('Livewire\Component');
+    ->not->toExtend('Illuminate\Database\Eloquent\Model');
+
+arch('livewire forms')
+    ->expect('App\Livewire\Forms')
+    ->toExtend('Livewire\Form');
 
 arch('providers')
     ->expect('App\Providers')

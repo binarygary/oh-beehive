@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ec23d185db623df501593087a763be2",
+    "content-hash": "fc96212b16bad18b6da3d28e7584db37",
     "packages": [
         {
             "name": "brick/math",
@@ -2025,16 +2025,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v4.2.3",
+            "version": "v3.7.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "d07bcb6fd04037a90ca5187b7857c7349a8e6d1e"
+                "reference": "152b5a1a3f9ee93b6887a3bad6ab8e6db035efa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/d07bcb6fd04037a90ca5187b7857c7349a8e6d1e",
-                "reference": "d07bcb6fd04037a90ca5187b7857c7349a8e6d1e",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/152b5a1a3f9ee93b6887a3bad6ab8e6db035efa5",
+                "reference": "152b5a1a3f9ee93b6887a3bad6ab8e6db035efa5",
                 "shasum": ""
             },
             "require": {
@@ -2089,7 +2089,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v4.2.3"
+                "source": "https://github.com/livewire/livewire/tree/v3.7.13"
             },
             "funding": [
                 {
@@ -2097,7 +2097,78 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-30T22:17:37+00:00"
+            "time": "2026-03-30T22:04:01+00:00"
+        },
+        {
+            "name": "livewire/volt",
+            "version": "v1.10.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/livewire/volt.git",
+                "reference": "32a111951779f9dcf2a08a5704acb940ac9a146c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/livewire/volt/zipball/32a111951779f9dcf2a08a5704acb940ac9a146c",
+                "reference": "32a111951779f9dcf2a08a5704acb940ac9a146c",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^10.38.2|^11.0|^12.0|^13.0",
+                "livewire/livewire": "^3.6.1|^4.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/folio": "^1.1",
+                "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",
+                "pestphp/pest": "^2.9.5|^3.0|^4.0",
+                "phpstan/phpstan": "^1.10|^2.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Livewire\\Volt\\VoltServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "functions.php"
+                ],
+                "psr-4": {
+                    "Livewire\\Volt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Nuno Maduro",
+                    "email": "nuno@laravel.com"
+                }
+            ],
+            "description": "An elegantly crafted functional API for Laravel Livewire.",
+            "homepage": "https://github.com/livewire/volt",
+            "keywords": [
+                "laravel",
+                "livewire",
+                "volt"
+            ],
+            "support": {
+                "issues": "https://github.com/livewire/volt/issues",
+                "source": "https://github.com/livewire/volt"
+            },
+            "time": "2026-03-18T14:16:30+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -7607,6 +7678,67 @@
                 }
             ],
             "time": "2026-02-20T12:07:12+00:00"
+        },
+        {
+            "name": "laravel/breeze",
+            "version": "v2.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/breeze.git",
+                "reference": "28cefeaf6af20177ddf5cc7b93e87e4ad79d533f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/breeze/zipball/28cefeaf6af20177ddf5cc7b93e87e4ad79d533f",
+                "reference": "28cefeaf6af20177ddf5cc7b93e87e4ad79d533f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^11.0|^12.0|^13.0",
+                "illuminate/filesystem": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "illuminate/validation": "^11.0|^12.0|^13.0",
+                "php": "^8.2.0",
+                "symfony/console": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^11.0|^12.0|^13.0",
+                "orchestra/testbench-core": "^9.0|^10.0|^11.0",
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Breeze\\BreezeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Breeze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
+            "keywords": [
+                "auth",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/breeze/issues",
+                "source": "https://github.com/laravel/breeze"
+            },
+            "time": "2026-03-10T19:59:01+00:00"
         },
         {
             "name": "laravel/pail",
