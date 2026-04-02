@@ -10,6 +10,7 @@
             $month >= 9 && $month <= 11 => 'Autumn',
             default => 'Winter',
         };
+        $hiveCount = auth()->user()->hives()->where('status', 'active')->count();
     @endphp
 
     <div class="space-y-6">
@@ -32,15 +33,16 @@
                     <div class="flex items-start justify-between">
                         <div>
                             <p class="text-xs font-semibold text-base-content/50 uppercase tracking-wide">Active Hives</p>
-                            <p class="text-3xl font-bold text-base-content mt-1.5">0</p>
+                            <p class="text-3xl font-bold text-base-content mt-1.5">{{ $hiveCount }}</p>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center text-xl">
                             🏠
                         </div>
                     </div>
-                    <p class="text-xs text-base-content/40 mt-3 border-t border-base-200 pt-3">
-                        No hives added yet
-                    </p>
+                    <a href="{{ route('hives.index') }}" wire:navigate
+                       class="text-xs text-base-content/40 hover:text-primary mt-3 border-t border-base-200 pt-3 block transition-colors">
+                        {{ $hiveCount === 0 ? 'No hives added yet' : 'View all hives →' }}
+                    </a>
                 </div>
             </div>
 
@@ -91,11 +93,10 @@
                     <p class="text-sm text-base-content/50 mt-1.5 max-w-sm">
                         Add your first hive, then record inspections in plain text — the AI will parse your notes into structured fields automatically.
                     </p>
-                    <div class="mt-6 flex flex-col items-center gap-2">
-                        <button class="btn btn-primary btn-sm opacity-50 cursor-not-allowed" disabled>
+                    <div class="mt-6">
+                        <a href="{{ route('hives.create') }}" wire:navigate class="btn btn-primary btn-sm">
                             + Add Your First Hive
-                        </button>
-                        <span class="text-xs text-base-content/30">Hive management coming next</span>
+                        </a>
                     </div>
                 </div>
             </div>
