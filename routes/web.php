@@ -17,6 +17,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Volt::route('/hives', 'pages.hives.index')->name('hives.index');
     Volt::route('/hives/create', 'pages.hives.create')->name('hives.create');
     Volt::route('/hives/{hive}/edit', 'pages.hives.edit')->name('hives.edit');
+
+    Volt::route('/inspections', 'pages.inspections.index')->name('inspections.index');
+    Volt::route('/inspections/create', 'pages.inspections.create')->name('inspections.create');
+    Volt::route('/inspections/{inspection}/edit', 'pages.inspections.edit')->name('inspections.edit');
 });
 
 require __DIR__.'/auth.php';

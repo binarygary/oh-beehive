@@ -11,7 +11,15 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property Carbon $inspected_at
+ * @property QueenStatus|null $queen_status
+ * @property VarroaMethod|null $varroa_method
+ * @property array<int, string>|null $disease_observations
+ * @property array<int, string>|null $followup_questions
+ */
 #[Fillable([
     'hive_id', 'user_id', 'inspected_at', 'raw_notes',
     'queen_seen', 'queen_status',
