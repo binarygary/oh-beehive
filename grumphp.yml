@@ -1,0 +1,11 @@
+grumphp:
+    tasks:
+        phpstan:
+            configuration: phpstan.neon
+            memory_limit: "-1"
+            ignore_patterns:
+                - /tests/
+        shell:
+            scripts:
+                - "scripts/pint-check.sh"
+                - "scripts/pest-run.sh"
