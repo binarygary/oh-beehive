@@ -2,9 +2,10 @@
 
 use App\Enums\HiveStatus;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new class extends Component
+new #[Layout('layouts.app')] class extends Component
 {
     public string $name = '';
     public string $location = '';
@@ -34,8 +35,7 @@ new class extends Component
     }
 }; ?>
 
-<x-app-layout>
-    <div class="max-w-xl space-y-6">
+<div class="max-w-xl space-y-6">
 
         {{-- Back link + heading --}}
         <div>
@@ -142,4 +142,3 @@ new class extends Component
         </div>
 
     </div>
-</x-app-layout>

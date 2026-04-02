@@ -1,9 +1,10 @@
 <?php
 
 use App\Models\Hive;
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new class extends Component
+new #[Layout('layouts.app')] class extends Component
 {
     public function delete(int $id): void
     {
@@ -23,8 +24,7 @@ new class extends Component
     }
 }; ?>
 
-<x-app-layout>
-    <div class="space-y-6">
+<div class="space-y-6">
 
         {{-- Page header --}}
         <div class="flex items-center justify-between">
@@ -127,4 +127,3 @@ new class extends Component
         @endif
 
     </div>
-</x-app-layout>
