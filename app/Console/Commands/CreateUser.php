@@ -33,6 +33,7 @@ class CreateUser extends Command
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
+            'email_verified_at' => now(),
         ]);
 
         $this->info("User [{$user->email}] created successfully.");
