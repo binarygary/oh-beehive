@@ -66,19 +66,34 @@
 
 ## Traceability
 
-Filled by roadmap agent.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PARSE-01 through PARSE-08 | TBD | Pending |
-| AUDIO-01 through AUDIO-06 | TBD | Pending |
-| CHART-01 through CHART-06 | TBD | Pending |
+| PARSE-02 | Existing (validated) | Complete |
+| PARSE-03 | Existing (validated) | Complete |
+| PARSE-04 | Existing (validated) | Complete |
+| PARSE-06 | Existing (validated) | Complete |
+| PARSE-01 | Phase 1 | Pending |
+| PARSE-08 | Phase 1 | Pending |
+| PARSE-05 | Phase 2 | Pending |
+| PARSE-07 | Phase 3 | Pending |
+| AUDIO-01 | Phase 4 | Pending |
+| AUDIO-03 | Phase 4 | Pending |
+| AUDIO-05 | Phase 4 | Pending |
+| AUDIO-06 | Phase 4 | Pending |
+| AUDIO-02 | Phase 5 | Pending |
+| AUDIO-04 | Phase 5 | Pending |
+| CHART-01 | Phase 6 | Pending |
+| CHART-02 | Phase 7 | Pending |
+| CHART-03 | Phase 7 | Pending |
+| CHART-04 | Phase 7 | Pending |
+| CHART-05 | Phase 7 | Pending |
+| CHART-06 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 20 total (4 already validated from existing code)
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 16 ⚠️
+- Remaining work items mapped to phases: 16/16
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-04*
-*Last updated: 2026-04-04 after initialization*
+*Last updated: 2026-04-04 after roadmap creation*
