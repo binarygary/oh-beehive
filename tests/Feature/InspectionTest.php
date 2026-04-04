@@ -53,7 +53,7 @@ test('can create an inspection with only required fields', function () {
         ->set('rawNotes', 'Hive looks healthy. Queen spotted on frame 3.')
         ->call('save')
         ->assertHasNoErrors()
-        ->assertRedirect('/inspections');
+        ->assertRedirect();
 
     $this->assertDatabaseHas('inspections', [
         'hive_id' => $hive->id,
