@@ -19,6 +19,8 @@ new #[Layout('layouts.app')] class extends Component
 
     /** @var array<int, string> */
     public array $followupQuestions = [];
+    /** @var array<string, bool> */
+    public array $aiFilledFields = [];
 
     public string $queenSeen = '';
     public string $queenStatus = '';
@@ -96,7 +98,8 @@ new #[Layout('layouts.app')] class extends Component
     public function parse(): void
     {
         $this->parseError = null;
-        
+        $this->aiFilledFields = [];
+
         if (strlen(trim($this->rawNotes)) < 5) {
             $this->parseError = 'Notes are too short to parse.';
             return;
@@ -116,33 +119,123 @@ new #[Layout('layouts.app')] class extends Component
         $ni = fn (mixed $v): string => $v !== null ? (string) (int) $v : '';
         $ns = fn (mixed $v): string => is_string($v) ? $v : '';
 
-        if (array_key_exists('queen_seen', $fields))           $this->queenSeen          = $nb($fields['queen_seen']);
-        if (array_key_exists('queen_status', $fields))         $this->queenStatus        = $ns($fields['queen_status']);
-        if (array_key_exists('eggs_present', $fields))         $this->eggsPresent        = $nb($fields['eggs_present']);
-        if (array_key_exists('larvae_present', $fields))       $this->larvaePresent      = $nb($fields['larvae_present']);
-        if (array_key_exists('capped_brood_present', $fields)) $this->cappedBroodPresent = $nb($fields['capped_brood_present']);
-        if (array_key_exists('brood_pattern_score', $fields))  $this->broodPatternScore  = $ni($fields['brood_pattern_score']);
-        if (array_key_exists('frames_of_brood', $fields))      $this->framesOfBrood      = $ni($fields['frames_of_brood']);
-        if (array_key_exists('frames_of_bees', $fields))       $this->framesOfBees       = $ni($fields['frames_of_bees']);
-        if (array_key_exists('frames_of_honey', $fields))      $this->framesOfHoney      = $ni($fields['frames_of_honey']);
-        if (array_key_exists('honey_stores_score', $fields))   $this->honeyStoresScore   = $ni($fields['honey_stores_score']);
-        if (array_key_exists('varroa_count', $fields))         $this->varroaCount        = $ni($fields['varroa_count']);
-        if (array_key_exists('varroa_method', $fields))        $this->varroaMethod       = $ns($fields['varroa_method']);
-        if (array_key_exists('temperament_score', $fields))    $this->temperamentScore   = $ni($fields['temperament_score']);
-        if (array_key_exists('overall_health_score', $fields)) $this->overallHealthScore = $ni($fields['overall_health_score']);
-        if (array_key_exists('feeding_done', $fields))         $this->feedingDone        = $nb($fields['feeding_done']);
-        if (array_key_exists('feeding_notes', $fields))        $this->feedingNotes       = $ns($fields['feeding_notes']);
-        if (array_key_exists('treatment_applied', $fields))    $this->treatmentApplied   = $ns($fields['treatment_applied']);
-        if (array_key_exists('supers_added', $fields))         $this->supersAdded        = $ni($fields['supers_added']);
-        if (array_key_exists('supers_removed', $fields))       $this->supersRemoved      = $ni($fields['supers_removed']);
-        if (array_key_exists('weather', $fields))              $this->weather            = $ns($fields['weather']);
+        if (array_key_exists('queen_seen', $fields)) {
+            $this->queenSeen = $nb($fields['queen_seen']);
+            $this->aiFilledFields['queenSeen'] = true;
+        }
+
+        if (array_key_exists('queen_status', $fields)) {
+            $this->queenStatus = $ns($fields['queen_status']);
+            $this->aiFilledFields['queenStatus'] = true;
+        }
+
+        if (array_key_exists('eggs_present', $fields)) {
+            $this->eggsPresent = $nb($fields['eggs_present']);
+            $this->aiFilledFields['eggsPresent'] = true;
+        }
+
+        if (array_key_exists('larvae_present', $fields)) {
+            $this->larvaePresent = $nb($fields['larvae_present']);
+            $this->aiFilledFields['larvaePresent'] = true;
+        }
+
+        if (array_key_exists('capped_brood_present', $fields)) {
+            $this->cappedBroodPresent = $nb($fields['capped_brood_present']);
+            $this->aiFilledFields['cappedBroodPresent'] = true;
+        }
+
+        if (array_key_exists('brood_pattern_score', $fields)) {
+            $this->broodPatternScore = $ni($fields['brood_pattern_score']);
+            $this->aiFilledFields['broodPatternScore'] = true;
+        }
+
+        if (array_key_exists('frames_of_brood', $fields)) {
+            $this->framesOfBrood = $ni($fields['frames_of_brood']);
+            $this->aiFilledFields['framesOfBrood'] = true;
+        }
+
+        if (array_key_exists('frames_of_bees', $fields)) {
+            $this->framesOfBees = $ni($fields['frames_of_bees']);
+            $this->aiFilledFields['framesOfBees'] = true;
+        }
+
+        if (array_key_exists('frames_of_honey', $fields)) {
+            $this->framesOfHoney = $ni($fields['frames_of_honey']);
+            $this->aiFilledFields['framesOfHoney'] = true;
+        }
+
+        if (array_key_exists('honey_stores_score', $fields)) {
+            $this->honeyStoresScore = $ni($fields['honey_stores_score']);
+            $this->aiFilledFields['honeyStoresScore'] = true;
+        }
+
+        if (array_key_exists('varroa_count', $fields)) {
+            $this->varroaCount = $ni($fields['varroa_count']);
+            $this->aiFilledFields['varroaCount'] = true;
+        }
+
+        if (array_key_exists('varroa_method', $fields)) {
+            $this->varroaMethod = $ns($fields['varroa_method']);
+            $this->aiFilledFields['varroaMethod'] = true;
+        }
+
+        if (array_key_exists('temperament_score', $fields)) {
+            $this->temperamentScore = $ni($fields['temperament_score']);
+            $this->aiFilledFields['temperamentScore'] = true;
+        }
+
+        if (array_key_exists('overall_health_score', $fields)) {
+            $this->overallHealthScore = $ni($fields['overall_health_score']);
+            $this->aiFilledFields['overallHealthScore'] = true;
+        }
+
+        if (array_key_exists('feeding_done', $fields)) {
+            $this->feedingDone = $nb($fields['feeding_done']);
+            $this->aiFilledFields['feedingDone'] = true;
+        }
+
+        if (array_key_exists('feeding_notes', $fields)) {
+            $this->feedingNotes = $ns($fields['feeding_notes']);
+            $this->aiFilledFields['feedingNotes'] = true;
+        }
+
+        if (array_key_exists('treatment_applied', $fields)) {
+            $this->treatmentApplied = $ns($fields['treatment_applied']);
+            $this->aiFilledFields['treatmentApplied'] = true;
+        }
+
+        if (array_key_exists('supers_added', $fields)) {
+            $this->supersAdded = $ni($fields['supers_added']);
+            $this->aiFilledFields['supersAdded'] = true;
+        }
+
+        if (array_key_exists('supers_removed', $fields)) {
+            $this->supersRemoved = $ni($fields['supers_removed']);
+            $this->aiFilledFields['supersRemoved'] = true;
+        }
+
+        if (array_key_exists('weather', $fields)) {
+            $this->weather = $ns($fields['weather']);
+            $this->aiFilledFields['weather'] = true;
+        }
 
         if (array_key_exists('disease_observations', $fields) && is_array($fields['disease_observations'])) {
             $this->diseaseObservations = $fields['disease_observations'];
+            $this->aiFilledFields['diseaseObservations'] = true;
         }
 
         $fq = $fields['followup_questions'] ?? null;
         $this->followupQuestions = is_array($fq) ? $fq : [];
+    }
+
+    public function updated(string $property): void
+    {
+        unset($this->aiFilledFields[$property]);
+    }
+
+    public function updatedDiseaseObservations(mixed $value, mixed $key): void
+    {
+        unset($this->aiFilledFields['diseaseObservations']);
     }
 
     public function save(): void
@@ -287,7 +380,7 @@ new #[Layout('layouts.app')] class extends Component
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-sm font-medium text-base-content">Weather</label>
-                        <input type="text" wire:model="weather" class="input input-bordered w-full" placeholder="e.g. Sunny, 18°C, light breeze" />
+                        <input type="text" wire:model.blur="weather" class="input input-bordered w-full" placeholder="e.g. Sunny, 18°C, light breeze" />
                     </div>
                 </div>
             </div>
@@ -312,7 +405,7 @@ new #[Layout('layouts.app')] class extends Component
                         @endforeach
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Queen Status</label>
-                            <select wire:model="queenStatus" class="select select-bordered w-full select-sm">
+                            <select wire:model.change="queenStatus" class="select select-bordered w-full select-sm">
                                 <option value="">Unknown</option>
                                 @foreach(QueenStatus::cases() as $s)
                                     <option value="{{ $s->value }}">{{ $s->label() }}</option>
@@ -332,7 +425,7 @@ new #[Layout('layouts.app')] class extends Component
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Frames of Brood</label>
-                            <input type="number" wire:model="framesOfBrood" min="0" max="20" class="input input-bordered input-sm w-28" placeholder="—" />
+                            <input type="number" wire:model.blur="framesOfBrood" min="0" max="20" class="input input-bordered input-sm w-28" placeholder="—" />
                         </div>
                     </div>
                 </div>
@@ -345,11 +438,11 @@ new #[Layout('layouts.app')] class extends Component
                     <div class="grid grid-cols-3 gap-4">
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Frames of Bees</label>
-                            <input type="number" wire:model="framesOfBees" min="0" max="20" class="input input-bordered input-sm w-full" placeholder="—" />
+                            <input type="number" wire:model.blur="framesOfBees" min="0" max="20" class="input input-bordered input-sm w-full" placeholder="—" />
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Frames of Honey</label>
-                            <input type="number" wire:model="framesOfHoney" min="0" max="20" class="input input-bordered input-sm w-full" placeholder="—" />
+                            <input type="number" wire:model.blur="framesOfHoney" min="0" max="20" class="input input-bordered input-sm w-full" placeholder="—" />
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Honey Stores <span class="text-xs text-base-content/40">(1–5)</span></label>
@@ -399,7 +492,7 @@ new #[Layout('layouts.app')] class extends Component
                         <div class="grid grid-cols-2 gap-1.5">
                             @foreach(['Chalkbrood','Sacbrood','EFB','AFB','Nosema','Small Hive Beetle','Wax Moth','Deformed Wing Virus'] as $disease)
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" wire:model="diseaseObservations" value="{{ $disease }}" class="checkbox checkbox-sm checkbox-primary" />
+                                <input type="checkbox" wire:model.change="diseaseObservations" value="{{ $disease }}" class="checkbox checkbox-sm checkbox-primary" />
                                 <span class="text-sm">{{ $disease }}</span>
                             </label>
                             @endforeach
@@ -415,11 +508,11 @@ new #[Layout('layouts.app')] class extends Component
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Mite Count <span class="text-xs text-base-content/40">per 100 bees</span></label>
-                            <input type="number" wire:model="varroaCount" min="0" class="input input-bordered input-sm w-full" placeholder="—" />
+                            <input type="number" wire:model.blur="varroaCount" min="0" class="input input-bordered input-sm w-full" placeholder="—" />
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Method</label>
-                            <select wire:model="varroaMethod" class="select select-bordered select-sm w-full">
+                            <select wire:model.change="varroaMethod" class="select select-bordered select-sm w-full">
                                 <option value="">—</option>
                                 @foreach(VarroaMethod::cases() as $m)
                                     <option value="{{ $m->value }}">{{ $m->label() }}</option>
@@ -448,19 +541,19 @@ new #[Layout('layouts.app')] class extends Component
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Feeding Notes</label>
-                            <input type="text" wire:model="feedingNotes" class="input input-bordered input-sm w-full" placeholder="e.g. 1:1 syrup, 1L" />
+                            <input type="text" wire:model.blur="feedingNotes" class="input input-bordered input-sm w-full" placeholder="e.g. 1:1 syrup, 1L" />
                         </div>
                         <div class="space-y-1.5 col-span-2">
                             <label class="text-sm font-medium text-base-content">Treatment Applied</label>
-                            <textarea wire:model="treatmentApplied" rows="2" class="textarea textarea-bordered w-full resize-none"></textarea>
+                            <textarea wire:model.blur="treatmentApplied" rows="2" class="textarea textarea-bordered w-full resize-none"></textarea>
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Supers Added</label>
-                            <input type="number" wire:model="supersAdded" min="0" class="input input-bordered input-sm w-24" placeholder="0" />
+                            <input type="number" wire:model.blur="supersAdded" min="0" class="input input-bordered input-sm w-24" placeholder="0" />
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-base-content">Supers Removed</label>
-                            <input type="number" wire:model="supersRemoved" min="0" class="input input-bordered input-sm w-24" placeholder="0" />
+                            <input type="number" wire:model.blur="supersRemoved" min="0" class="input input-bordered input-sm w-24" placeholder="0" />
                         </div>
                     </div>
                 </div>
