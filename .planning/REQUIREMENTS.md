@@ -15,7 +15,7 @@
 
 **Still needed:**
 - [ ] **PARSE-01**: Remove dead `ParseInspectionNotes` queue job (dead code, architectural ambiguity risk)
-- [ ] **PARSE-05**: Fields filled by AI are visually distinguished from fields entered manually
+- [x] **PARSE-05**: Fields filled by AI are visually distinguished from fields entered manually
 - [ ] **PARSE-07**: Keeper can answer follow-up questions inline; answers appended to raw notes and trigger re-parse
 - [x] **PARSE-08**: OpenAI client is faked/stubbed in tests so parsing tests don't make real API calls
 
@@ -74,7 +74,7 @@
 | PARSE-06 | Existing (validated) | Complete |
 | PARSE-01 | Phase 1 | Pending |
 | PARSE-08 | Phase 1 | Complete |
-| PARSE-05 | Phase 2 | Pending |
+| PARSE-05 | Phase 2 | Complete |
 | PARSE-07 | Phase 3 | Pending |
 | AUDIO-01 | Phase 4 | Pending |
 | AUDIO-03 | Phase 4 | Pending |
