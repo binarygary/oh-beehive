@@ -112,3 +112,49 @@ it('refreshes edit-form provenance from the latest parse payload only', function
             'weather' => true,
         ]);
 });
+
+it('renders ai badges for parsed edit-form labels', function () {
+    $user = User::factory()->create();
+    $hive = Hive::factory()->for($user)->create();
+    $inspection = Inspection::factory()->for($hive)->for($user, 'user')->create();
+
+    $fakeParser = new FakeInspectionParserService;
+    $fakeParser->parsedData = [
+        'queen_status' => 'laying',
+        'weather' => 'Sunny and warm',
+        'followup_questions' => null,
+    ];
+
+    $this->actingAs($user);
+    $this->app->instance(InspectionParserService::class, $fakeParser);
+
+    Volt::test('pages.inspections.edit', ['inspection' => $inspection])
+        ->call('parse')
+        ->assertSeeHtml('badge badge-sm badge-primary')
+        ->assertSee('AI');
+});
+
+it('does not mark omitted parser fields as ai-filled on the edit form', function () {
+    $user = User::factory()->create();
+    $hive = Hive::factory()->for($user)->create();
+    $inspection = Inspection::factory()->for($hive)->for($user, 'user')->create([
+        'queen_status' => 'not_laying',
+        'weather' => 'Overcast',
+    ]);
+
+    $fakeParser = new FakeInspectionParserService;
+    $fakeParser->parsedData = [
+        'weather' => 'Cloudy',
+        'followup_questions' => null,
+    ];
+
+    $this->actingAs($user);
+    $this->app->instance(InspectionParserService::class, $fakeParser);
+
+    Volt::test('pages.inspections.edit', ['inspection' => $inspection])
+        ->call('parse')
+        ->assertSet('queenStatus', 'not_laying')
+        ->assertSet('aiFilledFields', [
+            'weather' => true,
+        ]);
+});

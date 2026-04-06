@@ -238,6 +238,22 @@ new #[Layout('layouts.app')] class extends Component
         unset($this->aiFilledFields['diseaseObservations']);
     }
 
+    /**
+     * @return array<string, bool|string>
+     */
+    public function aiLabelClasses(string $property): array
+    {
+        return [
+            'text-sm font-medium text-base-content flex flex-wrap items-center gap-2' => true,
+            'text-primary' => isset($this->aiFilledFields[$property]),
+        ];
+    }
+
+    public function isAiFilled(string $property): bool
+    {
+        return isset($this->aiFilledFields[$property]);
+    }
+
     public function save(): void
     {
         $this->validate([
@@ -379,7 +395,12 @@ new #[Layout('layouts.app')] class extends Component
                         </div>
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-sm font-medium text-base-content">Weather</label>
+                        <label @class($this->aiLabelClasses('weather'))>
+                            Weather
+                            @if($this->isAiFilled('weather'))
+                                <span class="badge badge-sm badge-primary">AI</span>
+                            @endif
+                        </label>
                         <input type="text" wire:model.blur="weather" class="input input-bordered w-full" placeholder="e.g. Sunny, 18°C, light breeze" />
                     </div>
                 </div>
@@ -392,7 +413,12 @@ new #[Layout('layouts.app')] class extends Component
                     <div class="grid grid-cols-2 gap-x-6 gap-y-4">
                         @foreach([['queenSeen','Queen Seen?'],['eggsPresent','Eggs?'],['larvaePresent','Larvae?'],['cappedBroodPresent','Capped Brood?']] as [$prop, $label])
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">{{ $label }}</label>
+                            <label @class($this->aiLabelClasses($prop))>
+                                {{ $label }}
+                                @if($this->isAiFilled($prop))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <div class="join">
                                 <button type="button" wire:click="$set('{{ $prop }}', '')"
                                     @class(['join-item btn btn-sm', 'btn-neutral' => $this->$prop === '', 'btn-ghost' => $this->$prop !== ''])>—</button>
@@ -404,7 +430,12 @@ new #[Layout('layouts.app')] class extends Component
                         </div>
                         @endforeach
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Queen Status</label>
+                            <label @class($this->aiLabelClasses('queenStatus'))>
+                                Queen Status
+                                @if($this->isAiFilled('queenStatus'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <select wire:model.change="queenStatus" class="select select-bordered w-full select-sm">
                                 <option value="">Unknown</option>
                                 @foreach(QueenStatus::cases() as $s)
@@ -413,7 +444,12 @@ new #[Layout('layouts.app')] class extends Component
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Brood Pattern <span class="text-xs text-base-content/40">(1–5)</span></label>
+                            <label @class($this->aiLabelClasses('broodPatternScore'))>
+                                <span>Brood Pattern <span class="text-xs text-base-content/40">(1–5)</span></span>
+                                @if($this->isAiFilled('broodPatternScore'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <div class="join">
                                 <button type="button" wire:click="$set('broodPatternScore', '')"
                                     @class(['join-item btn btn-sm', 'btn-neutral' => $broodPatternScore === '', 'btn-ghost' => $broodPatternScore !== ''])>—</button>
@@ -424,7 +460,12 @@ new #[Layout('layouts.app')] class extends Component
                             </div>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Frames of Brood</label>
+                            <label @class($this->aiLabelClasses('framesOfBrood'))>
+                                Frames of Brood
+                                @if($this->isAiFilled('framesOfBrood'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="number" wire:model.blur="framesOfBrood" min="0" max="20" class="input input-bordered input-sm w-28" placeholder="—" />
                         </div>
                     </div>
@@ -437,15 +478,30 @@ new #[Layout('layouts.app')] class extends Component
                     <h2 class="font-semibold text-sm text-base-content/60 uppercase tracking-wide">Population & Stores</h2>
                     <div class="grid grid-cols-3 gap-4">
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Frames of Bees</label>
+                            <label @class($this->aiLabelClasses('framesOfBees'))>
+                                Frames of Bees
+                                @if($this->isAiFilled('framesOfBees'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="number" wire:model.blur="framesOfBees" min="0" max="20" class="input input-bordered input-sm w-full" placeholder="—" />
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Frames of Honey</label>
+                            <label @class($this->aiLabelClasses('framesOfHoney'))>
+                                Frames of Honey
+                                @if($this->isAiFilled('framesOfHoney'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="number" wire:model.blur="framesOfHoney" min="0" max="20" class="input input-bordered input-sm w-full" placeholder="—" />
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Honey Stores <span class="text-xs text-base-content/40">(1–5)</span></label>
+                            <label @class($this->aiLabelClasses('honeyStoresScore'))>
+                                <span>Honey Stores <span class="text-xs text-base-content/40">(1–5)</span></span>
+                                @if($this->isAiFilled('honeyStoresScore'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <div class="join">
                                 <button type="button" wire:click="$set('honeyStoresScore', '')"
                                     @class(['join-item btn btn-xs', 'btn-neutral' => $honeyStoresScore === '', 'btn-ghost' => $honeyStoresScore !== ''])>—</button>
@@ -465,7 +521,12 @@ new #[Layout('layouts.app')] class extends Component
                     <h2 class="font-semibold text-sm text-base-content/60 uppercase tracking-wide">Behaviour & Health</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Temperament <span class="text-xs text-base-content/40">1=calm 5=defensive</span></label>
+                            <label @class($this->aiLabelClasses('temperamentScore'))>
+                                <span>Temperament <span class="text-xs text-base-content/40">1=calm 5=defensive</span></span>
+                                @if($this->isAiFilled('temperamentScore'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <div class="join">
                                 <button type="button" wire:click="$set('temperamentScore', '')"
                                     @class(['join-item btn btn-sm', 'btn-neutral' => $temperamentScore === '', 'btn-ghost' => $temperamentScore !== ''])>—</button>
@@ -476,7 +537,12 @@ new #[Layout('layouts.app')] class extends Component
                             </div>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Overall Health <span class="text-xs text-base-content/40">(1–5)</span></label>
+                            <label @class($this->aiLabelClasses('overallHealthScore'))>
+                                <span>Overall Health <span class="text-xs text-base-content/40">(1–5)</span></span>
+                                @if($this->isAiFilled('overallHealthScore'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <div class="join">
                                 <button type="button" wire:click="$set('overallHealthScore', '')"
                                     @class(['join-item btn btn-sm', 'btn-neutral' => $overallHealthScore === '', 'btn-ghost' => $overallHealthScore !== ''])>—</button>
@@ -488,7 +554,12 @@ new #[Layout('layouts.app')] class extends Component
                         </div>
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-sm font-medium text-base-content">Disease Observations</label>
+                        <label @class($this->aiLabelClasses('diseaseObservations'))>
+                            Disease Observations
+                            @if($this->isAiFilled('diseaseObservations'))
+                                <span class="badge badge-sm badge-primary">AI</span>
+                            @endif
+                        </label>
                         <div class="grid grid-cols-2 gap-1.5">
                             @foreach(['Chalkbrood','Sacbrood','EFB','AFB','Nosema','Small Hive Beetle','Wax Moth','Deformed Wing Virus'] as $disease)
                             <label class="flex items-center gap-2 cursor-pointer">
@@ -507,11 +578,21 @@ new #[Layout('layouts.app')] class extends Component
                     <h2 class="font-semibold text-sm text-base-content/60 uppercase tracking-wide">Varroa <span class="text-xs font-normal normal-case">(optional)</span></h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Mite Count <span class="text-xs text-base-content/40">per 100 bees</span></label>
+                            <label @class($this->aiLabelClasses('varroaCount'))>
+                                <span>Mite Count <span class="text-xs text-base-content/40">per 100 bees</span></span>
+                                @if($this->isAiFilled('varroaCount'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="number" wire:model.blur="varroaCount" min="0" class="input input-bordered input-sm w-full" placeholder="—" />
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Method</label>
+                            <label @class($this->aiLabelClasses('varroaMethod'))>
+                                Method
+                                @if($this->isAiFilled('varroaMethod'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <select wire:model.change="varroaMethod" class="select select-bordered select-sm w-full">
                                 <option value="">—</option>
                                 @foreach(VarroaMethod::cases() as $m)
@@ -529,7 +610,12 @@ new #[Layout('layouts.app')] class extends Component
                     <h2 class="font-semibold text-sm text-base-content/60 uppercase tracking-wide">Actions Taken</h2>
                     <div class="grid grid-cols-2 gap-x-6 gap-y-4">
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Feeding Done?</label>
+                            <label @class($this->aiLabelClasses('feedingDone'))>
+                                Feeding Done?
+                                @if($this->isAiFilled('feedingDone'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <div class="join">
                                 <button type="button" wire:click="$set('feedingDone', '')"
                                     @class(['join-item btn btn-sm', 'btn-neutral' => $feedingDone === '', 'btn-ghost' => $feedingDone !== ''])>—</button>
@@ -540,19 +626,39 @@ new #[Layout('layouts.app')] class extends Component
                             </div>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Feeding Notes</label>
+                            <label @class($this->aiLabelClasses('feedingNotes'))>
+                                Feeding Notes
+                                @if($this->isAiFilled('feedingNotes'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="text" wire:model.blur="feedingNotes" class="input input-bordered input-sm w-full" placeholder="e.g. 1:1 syrup, 1L" />
                         </div>
                         <div class="space-y-1.5 col-span-2">
-                            <label class="text-sm font-medium text-base-content">Treatment Applied</label>
+                            <label @class($this->aiLabelClasses('treatmentApplied'))>
+                                Treatment Applied
+                                @if($this->isAiFilled('treatmentApplied'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <textarea wire:model.blur="treatmentApplied" rows="2" class="textarea textarea-bordered w-full resize-none"></textarea>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Supers Added</label>
+                            <label @class($this->aiLabelClasses('supersAdded'))>
+                                Supers Added
+                                @if($this->isAiFilled('supersAdded'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="number" wire:model.blur="supersAdded" min="0" class="input input-bordered input-sm w-24" placeholder="0" />
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-medium text-base-content">Supers Removed</label>
+                            <label @class($this->aiLabelClasses('supersRemoved'))>
+                                Supers Removed
+                                @if($this->isAiFilled('supersRemoved'))
+                                    <span class="badge badge-sm badge-primary">AI</span>
+                                @endif
+                            </label>
                             <input type="number" wire:model.blur="supersRemoved" min="0" class="input input-bordered input-sm w-24" placeholder="0" />
                         </div>
                     </div>
