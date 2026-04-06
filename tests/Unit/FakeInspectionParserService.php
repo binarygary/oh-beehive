@@ -23,7 +23,6 @@ class FakeInspectionParserService implements InspectionParserInterface
     /**
      * Parse raw notes text and return extracted field values.
      *
-     * @param string $rawNotes
      * @return array<string, mixed>
      */
     public function parseRaw(string $rawNotes): array

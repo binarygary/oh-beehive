@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Contracts\InspectionParserInterface;
+use App\Enums\QueenStatus;
 use App\Models\Hive;
 use App\Models\Inspection;
-use App\Services\InspectionParserService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Unit\FakeInspectionParserService;
@@ -21,7 +21,7 @@ class InspectionParserTest extends TestCase
         // Arrange
         $hive = Hive::factory()->create();
         $inspection = Inspection::factory()->create(['hive_id' => $hive->id, 'raw_notes' => 'Queen seen, laying well.']);
-        $fakeParser = new FakeInspectionParserService();
+        $fakeParser = new FakeInspectionParserService;
 
         // Act
         $this->app->instance(InspectionParserInterface::class, $fakeParser);
@@ -31,7 +31,7 @@ class InspectionParserTest extends TestCase
         // Assert
         $inspection->refresh();
         $this->assertTrue($inspection->queen_seen);
-        $this->assertEquals(\App\Enums\QueenStatus::Laying, $inspection->queen_status);
+        $this->assertEquals(QueenStatus::Laying, $inspection->queen_status);
         $this->assertEquals(5, $inspection->brood_pattern_score);
     }
 }

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\InspectionParserInterface;
 use App\Models\Inspection;
 use OpenAI\Client;
 
-class InspectionParserService
+class InspectionParserService implements InspectionParserInterface
 {
     public function __construct(private readonly Client $client) {}
 
