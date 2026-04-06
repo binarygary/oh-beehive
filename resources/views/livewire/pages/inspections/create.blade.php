@@ -44,6 +44,8 @@ new #[Layout('layouts.app')] class extends Component
     public string $supersAdded = '';
     public string $supersRemoved = '';
 
+    public ?string $parseError = null;
+
     public function mount(): void
     {
         $this->inspectedAt = now()->format('Y-m-d\TH:i');
@@ -64,9 +66,12 @@ new #[Layout('layouts.app')] class extends Component
         ];
     }
 
-    public function updatedRawNotes(): void
+    public function parse(): void
     {
-        if (strlen(trim($this->rawNotes)) < 15) {
+        $this->parseError = null;
+        
+        if (strlen(trim($this->rawNotes)) < 5) {
+            $this->parseError = 'Notes are too short to parse.';
             return;
         }
 
@@ -75,7 +80,8 @@ new #[Layout('layouts.app')] class extends Component
 
         try {
             $fields = $parser->parseRaw($this->rawNotes);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            $this->parseError = 'Could not parse notes. Please check the format.';
             return;
         }
 
@@ -192,22 +198,28 @@ new #[Layout('layouts.app')] class extends Component
                     <label class="text-sm font-medium text-base-content">
                         Observations <span class="text-error">*</span>
                     </label>
-                    <span wire:loading wire:target="updatedRawNotes"
-                          class="flex items-center gap-1.5 text-xs text-base-content/50">
-                        <span class="loading loading-spinner loading-xs"></span>
-                        Analyzing…
-                    </span>
+                    <button type="button" wire:click="parse" class="btn btn-sm btn-outline btn-primary">
+                        <span wire:loading.remove wire:target="parse">Parse</span>
+                        <span wire:loading wire:target="parse" class="loading loading-spinner loading-xs"></span>
+                    </button>
                 </div>
-                <textarea wire:model.live.debounce.5000ms="rawNotes" rows="7"
+                <textarea wire:model="rawNotes" rows="7"
                     class="textarea textarea-bordered w-full resize-y text-sm leading-relaxed"
                     placeholder="Write your raw notes here — queen seen on frame 3, good brood pattern, 6 frames of bees, added a super…"></textarea>
                 @error('rawNotes') <p class="text-error text-xs">{{ $message }}</p> @enderror
             </div>
         </div>
 
+        @if($parseError)
+            <div class="alert alert-warning">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <span>{{ $parseError }}</span>
+            </div>
+        @endif
+
         {{-- Follow-up questions — shown when AI couldn't determine everything --}}
         @if(!empty($followupQuestions))
-        <div class="alert alert-warning">
+        <div class="alert alert-info">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -223,7 +235,7 @@ new #[Layout('layouts.app')] class extends Component
         @endif
 
         {{-- Fields — dimmed while AI is running --}}
-        <div wire:loading.class="opacity-40 pointer-events-none" wire:target="updatedRawNotes" class="space-y-4">
+        <div class="space-y-4">
 
             {{-- Basics --}}
             <div class="card bg-base-100 border border-base-300 shadow-sm">
