@@ -20,7 +20,7 @@
 **Plans**: 2 plans
 Plans:
 - [x] 02-01-PLAN.md — Add create-form AI provenance state, badge rendering, and focused Volt coverage
-- [ ] 02-02-PLAN.md — Mirror AI provenance on the edit form with isolated Volt coverage
+- [x] 02-02-PLAN.md — Mirror AI provenance on the edit form with isolated Volt coverage
 **Canonical refs:**
 - `.planning/REQUIREMENTS.md` §AI Parsing — PARSE-05 definition
 - `resources/views/livewire/pages/inspections/` — inspection form Volt components
