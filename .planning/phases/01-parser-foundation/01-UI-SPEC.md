@@ -21,7 +21,7 @@ created: 2026-04-05
 | Preset | bumblebee (`data-theme="bumblebee"` on `<html>`) |
 | Component library | DaisyUI v5 (Tailwind v4 plugin, no components.json) |
 | Icon library | Inline SVG Heroicons — stroke-based, `stroke-width="2"`, sized via `h-4 w-4` or `h-5 w-5` |
-| Font | Figtree — loaded from Bunny Fonts at weights 400, 500, 600; declared in `@theme { --font-sans }` |
+| Font | Figtree — loaded from Bunny Fonts at weights 400, 600; declared in `@theme { --font-sans }` |
 
 **Source:** `resources/css/app.css` (@theme block), `resources/views/layouts/app.blade.php` (data-theme, font link), codebase scan.
 
@@ -38,12 +38,13 @@ Declared values (must be multiples of 4):
 | xs | 4px | Icon gaps (`gap-1`), tight inline spacing |
 | sm | 8px | Compact element spacing (`gap-2`, `space-y-2`, `p-2`) |
 | md | 16px | Default element spacing (`gap-4`, `space-y-4`) |
-| lg | 20px | Card body padding (`p-5`) |
-| xl | 24px | Page padding mobile (`p-6`), section gaps (`space-y-6`) |
+| xl | 24px | Page padding mobile (`p-6`), card body padding (`p-6`), section gaps (`space-y-6`) |
 | 2xl | 32px | Page padding desktop (`lg:p-8`) |
 | sidebar | 256px | Sidebar width (`w-64`) — fixed layout token |
 
-Exceptions: `space-y-1.5` (6px) used for label-to-input gaps within field groups — matches existing pattern throughout form. `gap-1.5` used for icon-to-text pairs in navigation links. These are inherited patterns; do not change them in Phase 1.
+**Pre-existing undeclared values (not governed by this spec):** `space-y-1.5` (6px) and `gap-1.5` (6px) appear in `create.blade.php` and `navigation.blade.php` as inherited patterns (label-to-input gaps, icon-to-text pairs in nav links). These are not introduced in Phase 1 and are not part of the declared scale. Do not use these values in new Phase 1 code; use `sm` (8px) as the nearest governed token.
+
+**Note on `p-5` (20px):** The existing codebase uses `p-5` as a DaisyUI card body default. This value is pre-existing and not introduced in Phase 1. It is not part of the declared scale. New Phase 1 markup uses `p-6` (`xl`, 24px) for card body padding.
 
 **Source:** Pattern-matched from `create.blade.php`, `navigation.blade.php`, `app.blade.php`.
 
@@ -54,9 +55,11 @@ Exceptions: `space-y-1.5` (6px) used for label-to-input gaps within field groups
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
 | Body | 14px (`text-sm`) | 400 (`font-normal`) | 1.5 (`leading-relaxed` on textarea) |
-| Label | 14px (`text-sm`) | 500 (`font-medium`) | 1.5 |
+| Label | 14px (`text-sm`) | 400 (`font-normal`) | 1.5 |
 | Heading (section) | 12px (`text-xs`) | 600 (`font-semibold`) | 1 — uppercase + tracking-wide (`uppercase tracking-wide`) |
-| Heading (page) | 24px (`text-2xl`) | 700 (`font-bold`) | 1.2 |
+| Heading (page) | 24px (`text-2xl`) | 600 (`font-semibold`) | 1.2 |
+
+**Weight consolidation:** This spec declares exactly 2 weights. `font-medium` (500) is consolidated into `font-normal` (400) — the visual difference at 14px on Figtree is negligible. `font-bold` (700) is consolidated into `font-semibold` (600) — page headings use `font-semibold` instead. Existing files that use `font-medium` or `font-bold` are pre-existing; do not touch them in Phase 1 beyond the two files being modified (`create.blade.php`, `edit.blade.php`). All new markup introduced in Phase 1 must use only `font-normal` or `font-semibold`.
 
 Note: The project uses exactly these four roles. No display size is used in Phase 1 scope. Section headings are intentionally small-caps style (`text-xs font-semibold uppercase tracking-wide text-base-content/60`).
 
@@ -106,7 +109,7 @@ Phase 1 is infrastructure-focused. The only two UI surface changes are:
 <button type="button" wire:click="parse" wire:loading.attr="disabled" wire:target="parse"
         class="btn btn-primary btn-sm">
     <span wire:loading.remove wire:target="parse">Parse Notes</span>
-    <span wire:loading wire:target="parse" class="flex items-center gap-1.5">
+    <span wire:loading wire:target="parse" class="flex items-center gap-2">
         <span class="loading loading-spinner loading-xs"></span>
         Analyzing…
     </span>
@@ -117,7 +120,7 @@ Phase 1 is infrastructure-focused. The only two UI surface changes are:
 
 **Position within card:** Below the textarea, above any error alert. Order: `<textarea>` → `<button type="button">Parse Notes</button>` → `[alert-warning if parseError]` → `@error('rawNotes')`.
 
-**Loading state:** The existing `wire:loading` / `wire:loading.remove` pattern used throughout the form. The "Analyzing…" spinner that previously appeared in the card header (`wire:target="updatedRawNotes"`) is relocated to inside this button. The header `span wire:loading` for the old debounce target is removed.
+**Loading state:** The existing `wire:loading` / `wire:loading.remove` pattern used throughout the form. The "Analyzing…" spinner that previously appeared in the card header (`wire:target="updatedRawNotes"`) is relocated to inside this button. The header `span wire:loading` for the old debounce target is removed. Gap between spinner and text uses `gap-2` (8px / `sm` token) — governed value.
 
 **Disabled state:** Button is disabled (`btn-disabled`) while `strlen(trim($rawNotes)) < 15`. Disabled state uses DaisyUI `btn-disabled` class rather than native `disabled` attribute to preserve Livewire wire binding.
 
