@@ -91,3 +91,41 @@ it('refreshes create-form provenance from the latest parse payload only', functi
             'weather' => true,
         ]);
 });
+
+it('renders ai badges for parsed create-form labels', function () {
+    $user = User::factory()->create();
+    $fakeParser = new FakeInspectionParserService;
+    $fakeParser->parsedData = [
+        'queen_status' => 'laying',
+        'weather' => 'Sunny and warm',
+        'followup_questions' => null,
+    ];
+
+    $this->actingAs($user);
+    $this->app->instance(InspectionParserService::class, $fakeParser);
+
+    Volt::test('pages.inspections.create')
+        ->set('rawNotes', 'Queen is laying in sunny weather.')
+        ->call('parse')
+        ->assertSeeHtml('badge badge-sm badge-primary')
+        ->assertSee('AI');
+});
+
+it('does not mark omitted parser fields as ai-filled on the create form', function () {
+    $user = User::factory()->create();
+    $fakeParser = new FakeInspectionParserService;
+    $fakeParser->parsedData = [
+        'weather' => 'Cloudy',
+        'followup_questions' => null,
+    ];
+
+    $this->actingAs($user);
+    $this->app->instance(InspectionParserService::class, $fakeParser);
+
+    Volt::test('pages.inspections.create')
+        ->set('rawNotes', 'Cloudy weather only.')
+        ->call('parse')
+        ->assertSet('aiFilledFields', [
+            'weather' => true,
+        ]);
+});
