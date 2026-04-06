@@ -260,12 +260,11 @@ $this->followupQuestions = is_array($fq) ? $fq : [];
 |---|-------|---------|---------------|
 | A1 | The planner should treat the “clear when manually edited” requirement as immediate visual feedback, not “clear on next action only.” [ASSUMED] | Summary, Architecture Patterns, Common Pitfalls | The implementation could technically satisfy tests while feeling wrong in the browser if the product owner only wanted eventual clearing. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should every parser-populated field get the AI badge, including free-text fields like `weather`, `feedingNotes`, and `treatmentApplied`?**
-   What we know: The parser can populate those fields, and the requirement says AI-filled fields should be visually distinguished. [VERIFIED: `.planning/REQUIREMENTS.md`, `app/Services/InspectionParserService.php`]
-   What's unclear: The context leaves exact field coverage to Claude’s discretion. [VERIFIED: `.planning/phases/02-field-provenance/02-CONTEXT.md`]
-   Recommendation: Plan for all parser-populated fields so provenance is consistent and easy to explain; drop only if UI review finds specific labels too noisy. [INFERENCE from requirement scope and parser field list]
+   Resolution: **Yes.** Phase 02 plans now treat every parser-populated structured field as provenance-aware so PARSE-05 stays consistent across booleans, selects, numeric inputs, text inputs, textareas, and the disease checkbox group. [VERIFIED: `.planning/phases/02-field-provenance/02-01-PLAN.md`, `.planning/phases/02-field-provenance/02-02-PLAN.md`, `.planning/phases/02-field-provenance/02-UI-SPEC.md`]
+   Why: The requirement says AI-filled fields should be visually distinguished, and the approved UI-SPEC locks a label-level badge treatment that remains light enough to apply broadly without adding noisy input chrome. [VERIFIED: `.planning/REQUIREMENTS.md`, `.planning/phases/02-field-provenance/02-UI-SPEC.md`]
 
 ## Environment Availability
 
@@ -308,9 +307,9 @@ This phase has no external runtime dependency beyond the repo’s normal PHP/Com
 - **Phase gate:** `composer test` plus a targeted browser/manual check that badge clearing occurs on blur/change, not only after Save. [INFERENCE from Livewire sync semantics]
 
 ### Wave 0 Gaps
-- [ ] Add create-form provenance tests to [`tests/Feature/InspectionTest.php`](/Users/garykovar/projects/codeable/oh-beehive/tests/Feature/InspectionTest.php) for parse population and single-field clearing. [VERIFIED: `tests/Feature/InspectionTest.php`]
-- [ ] Add edit-form provenance tests to [`tests/Feature/InspectionTest.php`](/Users/garykovar/projects/codeable/oh-beehive/tests/Feature/InspectionTest.php) for parse population and single-field clearing. [VERIFIED: `tests/Feature/InspectionTest.php`]
-- [ ] Bind a fake parser in those tests so `call('parse')` returns deterministic keys without external API access. [VERIFIED: `tests/Unit/FakeInspectionParserService.php`, `tests/Feature/InspectionParserTest.php`] 
+- [ ] Add create-form provenance tests to `tests/Feature/InspectionCreateTest.php` for parse population, single-field clearing, and re-parse refresh. [VERIFIED: `.planning/phases/02-field-provenance/02-01-PLAN.md`]
+- [ ] Add edit-form provenance tests to `tests/Feature/InspectionEditTest.php` for parse population, single-field clearing, and re-parse refresh. [VERIFIED: `.planning/phases/02-field-provenance/02-02-PLAN.md`]
+- [ ] Bind a fake parser in those tests so `call('parse')` returns deterministic keys without external API access. [VERIFIED: `tests/Unit/FakeInspectionParserService.php`, `tests/Feature/InspectionParserTest.php`]
 
 ## Security Domain
 
